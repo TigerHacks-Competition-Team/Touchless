@@ -16,6 +16,8 @@ class App extends React.Component {
           audio: false,
           video: {
             facingMode: "user",
+            width: { exact: 416 },
+            height: {exact: 416}, 
           }
         })
         .then((stream) => {
@@ -46,7 +48,7 @@ class App extends React.Component {
 
 
 detectFrame = (video) => {
-    this.model.infer(video, 1, 0).then((predictions) => {
+    this.model.infer(video, 2, 0.04).then((predictions) => {
       //console.log("adding to frame: " + JSON.stringify(predictions[0].bbox));
       this.renderPredictions(predictions);
       requestAnimationFrame(() => {
@@ -103,14 +105,14 @@ renderPredictions = (predictions) => {
         playsInline
         muted
         ref={this.videoRef}
-        width="600"
-        height=""
+        width="416"
+        height="416"
       />
       <canvas
         className="size"
         ref={this.canvasRef}
-        width="600"
-        height="500"
+        width="416"
+        height="416"
       />
       <section style={{paddingRight: 200}}>
       <div style={styles.box}>
