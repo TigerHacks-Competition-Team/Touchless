@@ -75,7 +75,7 @@ export default class MLModel {
         width,
         height,
         boxes2.arraySync(),
-        maxScores,
+        scores,
         indexes,
         clss
       );
