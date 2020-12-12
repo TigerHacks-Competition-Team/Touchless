@@ -56,7 +56,7 @@ detectFrame = (video) => {
   };
 
 renderPredictions = (predictions) => {
-    const classes = ["Hand"];
+    const classes = ["Not Detecting", "Closed Hand", "Thumbs Down", "Thumbs Up", "Five", "Four", "One", "Three", "Two"];
     const ctx = this.canvasRef.current.getContext("2d");
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     // Font options.
@@ -90,28 +90,29 @@ renderPredictions = (predictions) => {
       const y = prediction.bbox[1];
       // Draw the text last to ensure it's on top.
       ctx.fillStyle = "#000000";
-      ctx.fillText(prediction.class + " %" + prediction.score * 100, x, y);
+      ctx.fillText(classes[prediction.class] + " %" + prediction.score * 100, x, y);
     });
   };
   render(){
   return (
     <div className="App">
-      <p style={styles.header}>Touchless</p>
+      
       <video
         className="size"
         autoPlay
         playsInline
         muted
         ref={this.videoRef}
-        width="416"
-        height="416"
+        width="600"
+        height=""
       />
       <canvas
         className="size"
         ref={this.canvasRef}
-        width="416"
-        height="416"
+        width="600"
+        height="500"
       />
+      <p style={styles.header}>Touchless</p>
       <Menu />
     </div>
   );

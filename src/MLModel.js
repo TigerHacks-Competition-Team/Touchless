@@ -1,6 +1,6 @@
 import * as tf from "@tensorflow/tfjs";
 
-const viewPort = [640, 480];
+const viewPort = [600, 500];
 
 export default class MLModel {
   constructor(props) {
