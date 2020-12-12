@@ -112,10 +112,12 @@ renderPredictions = (predictions) => {
         width="600"
         height="500"
       />
+      <section style={{paddingRight: 200}}>
       <div style={styles.box}>
       <p style={{alignText: "center"}}>MENU</p>
         <Menu />
       </div>
+      </section>
     </div>
   );
   }
@@ -128,9 +130,8 @@ const styles = {
     border: '1px solid #A9A9A9',
     marginTop: '2%',
     marginLeft: 'auto',
-    marginRight: 'auto',
+    //marginRight: 'auto',
     padding: '10px',
-    paddingRight: 50,
   },
 }
 
