@@ -114,17 +114,25 @@ renderPredictions = (predictions) => {
         width="416"
         height="416"
       />
-      <p style={styles.header}>Touchless</p>
-      <Menu />
+      <div style={styles.box}>
+      <p style={{alignText: "center"}}>MENU</p>
+        <Menu />
+      </div>
     </div>
   );
   }
 }
 
 const styles = {
-  header: {
-    textAlign: "center",
-    color: '#3DC4BB',
+  box: {
+    alignContent: "center",
+    width: '30%',
+    border: '1px solid #A9A9A9',
+    marginTop: '2%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    padding: '10px',
+    paddingRight: 50,
   },
 }
 
