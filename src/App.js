@@ -27,13 +27,9 @@ class App extends React.Component {
             }
           })
         })
-      /*
+      
       const model = new MLModel("web_model/model.json");
       const modelPromise = model.load();
-      //const modelPromise = cocoSsd.load();
-      /*const modelPromise = tf.loadFrozenModel(
-        "https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@1.0.0"
-      );
       console.log("getting model");
       Promise.all([modelPromise, webCamPromise])
         .then((values) => {
@@ -43,7 +39,7 @@ class App extends React.Component {
         })
         .catch((error) => {
           console.error(error);
-        });*/
+        });
     }
   }
 
@@ -107,14 +103,14 @@ renderPredictions = (predictions) => {
         playsInline
         muted
         ref={this.videoRef}
-        width="600"
-        height="500"
+        width="640"
+        height="480"
       />
       <canvas
         className="size"
         ref={this.canvasRef}
-        width="600"
-        height="500"
+        width="640"
+        height="480"
       />
       <Menu />
     </div>
