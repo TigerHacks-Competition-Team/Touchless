@@ -4,11 +4,11 @@ class Subcategory extends React.Component{
     render(){
         return (
                 <div>
-                  <h2>{this.props.data.name}</h2>
+                  <h2 style={styles.menu}>{this.props.data.name}</h2>
                     {this.props.data.menuItems.map(element => (
-                      <div key={element.description}>
-                        <p>
-                        {element.description}
+                      <div>
+                        <p style={styles.menuItems}>
+                        {element}
                         </p>
                       </div>
                     ))}
@@ -16,6 +16,7 @@ class Subcategory extends React.Component{
         );
     }
 }
+
 
 class Menu extends React.Component {
     constructor(props) {
@@ -25,12 +26,17 @@ class Menu extends React.Component {
             [
                 {
                 name: "Breakfast",
-                menuItems: []
+                menuItems: ["Pancake", "Cheese"]
                 },
                 {
                 name: "Lunch",
                 menuItems: []
+                },
+                {
+                name: "Dinner",
+                menuItems:[],
                 }
+
             ]  
         }
     }
@@ -41,6 +47,8 @@ class Menu extends React.Component {
       return (
        <div>
            <Subcategory data={this.state.data[0]} />
+           <Subcategory data={this.state.data[1]} />
+           <Subcategory data={this.state.data[2]} />
        </div>
       );
     }
@@ -48,3 +56,13 @@ class Menu extends React.Component {
 
 
 export default Menu;
+
+const styles = {
+    menu: {
+      textAlign: "center",
+      color: '#3DC4BB',
+    },
+    menuItems: {
+        textAlign: "center"
+    }
+  }
