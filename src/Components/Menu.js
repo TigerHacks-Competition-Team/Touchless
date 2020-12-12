@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 
-const Subcategory = ({ data = { menuItems: [] }, ...props }) => (
-    <div className="subcategory" {...props}>
+const Subcategory = ({ data = { menuItems: [] }}) => (
+    <div>
       <h2>{data.name}</h2>
       <ul>
         {data.menuItems.map(element => (
