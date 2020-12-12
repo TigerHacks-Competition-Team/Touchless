@@ -3,9 +3,11 @@ import React, { Component } from 'react';
 class Subcategory extends React.Component{
     render(){
         return (
-                <div>
-                  <h2 style={styles.menu}>{this.props.data.name}</h2>
-                    {this.props.data.menuItems.map(element => (
+                <div style={styles.subCategoryDiv}>
+                  <button style={styles.menu}
+                          onClick={this.props.onClick}>
+                  {this.props.data.name}</button>
+                    {this.props.toRender && this.props.data.menuItems.map(element => (
                       <div>
                         <p style={styles.menuItems}>
                         {element}
@@ -22,23 +24,36 @@ class Menu extends React.Component {
     constructor(props) {
       super(props);
         this.state = {
+            renderedSubmenu: 0,
             data:
             [
                 {
                 name: "Breakfast",
-                menuItems: ["Pancake", "Cheese"]
+                menuItems: ["Pancake", "Cheese"],
                 },
                 {
                 name: "Lunch",
-                menuItems: []
+                menuItems: ["Sandwich", "Soup"],
                 },
                 {
                 name: "Dinner",
-                menuItems:[]
+                menuItems:["Pasta", "Chicken"],
                 }
 
             ]  
         }
+    }
+
+    openCategory = (nthCategory) => {
+      let numCategories = this.state.data.length
+      if (nthCategory > numCategories) {
+        console.log("Invalid Category")
+        return
+      }
+      this.setState({
+        renderedSubmenu: nthCategory,
+      })
+      console.log(this.state.renderedSubmenu)
     }
   
     render() {
@@ -46,9 +61,13 @@ class Menu extends React.Component {
           
       return (
        <div>
-           <Subcategory data={this.state.data[0]} />
-           <Subcategory data={this.state.data[1]} />
-           <Subcategory data={this.state.data[2]} />
+           <Subcategory data={this.state.data[0]} 
+                        toRender={this.state.renderedSubmenu === 0}
+                        onClick={() => this.openCategory(0)}/>
+           <Subcategory data={this.state.data[1]} toRender={this.state.renderedSubmenu === 1}
+                        onClick={() => this.openCategory(1)}/>
+           <Subcategory data={this.state.data[2]} toRender={this.state.renderedSubmenu === 2}
+                        onClick={() => this.openCategory(2)}/>
        </div>
       );
     }
@@ -58,11 +77,19 @@ class Menu extends React.Component {
 export default Menu;
 
 const styles = {
+    subCategoryDiv: {
+      display: "flex",
+      justifyContent: "center",
+      flexDirection: "column",
+    },
     menu: {
       textAlign: "center",
       color: '#3DC4BB',
+      fontSize: "1.5em",
     },
     menuItems: {
+        margin: "2px",
+        padding: "1px",
         textAlign: "center"
     }
   }
