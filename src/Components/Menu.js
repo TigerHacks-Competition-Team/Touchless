@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 
-
-const Subcategory = ({ data = { menuItems: [] }}) => (
-    <div>
-      <h2>{data.name}</h2>
-      <ul>
-        {data.menuItems.map(element => (
-          <li key={element.description}>
-            {element.description}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-
+class Subcategory extends React.Component{
+    render(){
+        return (
+                <div>
+                  <h2>{this.props.data.name}</h2>
+                    {this.props.data.menuItems.map(element => (
+                      <div key={element.description}>
+                        <p>
+                        {element.description}
+                        </p>
+                      </div>
+                    ))}
+                </div>
+        );
+    }
+}
 
 class Menu extends React.Component {
     constructor(props) {
@@ -22,11 +24,11 @@ class Menu extends React.Component {
             data:
             [
                 {
-                name: Breakfast,
+                name: "Breakfast",
                 menuItems: []
                 },
                 {
-                name: Lunch,
+                name: "Lunch",
                 menuItems: []
                 }
             ]  
@@ -37,9 +39,9 @@ class Menu extends React.Component {
     
           
       return (
-        <ul>
-
-        </ul>
+       <div>
+           <Subcategory data={this.state.data[0]} />
+       </div>
       );
     }
   }
