@@ -34,7 +34,7 @@ class Menu extends React.Component {
                 },
                 {
                 name: "Dinner",
-                menuItems:[],
+                menuItems:[]
                 }
 
             ]  
