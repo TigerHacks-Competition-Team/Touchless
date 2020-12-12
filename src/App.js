@@ -103,14 +103,14 @@ renderPredictions = (predictions) => {
         playsInline
         muted
         ref={this.videoRef}
-        width="640"
-        height="480"
+        width="416"
+        height="416"
       />
       <canvas
         className="size"
         ref={this.canvasRef}
-        width="640"
-        height="480"
+        width="416"
+        height="416"
       />
       <Menu />
     </div>

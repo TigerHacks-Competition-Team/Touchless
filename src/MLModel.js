@@ -15,6 +15,7 @@ export default class MLModel {
   };
 
   infer = async (img, maxNumBoxes, minScore) => {
+    tf.setBackend("webgl")
     img = tf.browser.fromPixels(img);
     img = tf.image.resizeBilinear(img, [416, 416]);
     img = img.expandDims(0);
