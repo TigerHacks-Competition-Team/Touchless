@@ -67,32 +67,30 @@ renderPredictions = (predictions) => {
     ctx.textBaseline = "top";
     console.log("predictions: " + predictions.length);
     predictions.forEach((prediction) => {
-      const x = prediction.bbox[0];
-      const y = prediction.bbox[1];
-      const width = prediction.bbox[2];
-      const height = prediction.bbox[3];
-      console.log(
-        "x: " + x + "; y: " + y + "; width: " + width + "; height: " + height
-      );
-      // Draw the bounding box.
-      ctx.strokeStyle = "#00FFFF";
-      ctx.lineWidth = 4;
-      ctx.strokeRect(x, y, width, height);
-      // Draw the label background.
-      ctx.fillStyle = "#00FFFF";
-      const textWidth = ctx.measureText(
-        classes[prediction.class] + " %" + prediction.score
-      ).width;
-      const textHeight = parseInt(font, 10); // base 10
-      ctx.fillRect(x, y, textWidth + 4, textHeight + 4);
-    });
-
-    predictions.forEach((prediction) => {
-      const x = prediction.bbox[0];
-      const y = prediction.bbox[1];
-      // Draw the text last to ensure it's on top.
-      ctx.fillStyle = "#000000";
-      ctx.fillText(classes[prediction.class] + " %" + prediction.score * 100, x, y);
+      if (prediction.score > 0.05) {
+        const x = prediction.bbox[0];
+        const y = prediction.bbox[1];
+        const width = prediction.bbox[2];
+        const height = prediction.bbox[3];
+        console.log(
+          "x: " + x + "; y: " + y + "; width: " + width + "; height: " + height
+        );
+        // Draw the bounding box.
+        ctx.strokeStyle = "#00FFFF";
+        ctx.lineWidth = 4;
+        ctx.strokeRect(x, y, width, height);
+        // Draw the label background.
+        ctx.fillStyle = "#00FFFF";
+        const textWidth = ctx.measureText(
+          classes[prediction.class] + " %" + prediction.score
+        ).width;
+        const textHeight = parseInt(font, 10); // base 10
+        ctx.fillRect(x, y, textWidth + 4, textHeight + 4);
+        // Draw the text last to ensure it's on top.
+        ctx.fillStyle = "#000000";
+        ctx.fillText(classes[prediction.class] + " %" + prediction.score * 100, x, y);
+      }
+      
     });
   };
   render(){
@@ -114,10 +112,12 @@ renderPredictions = (predictions) => {
         width="416"
         height="416"
       />
+      <section style={{paddingRight: 200}}>
       <div style={styles.box}>
       <p style={{alignText: "center"}}>MENU</p>
         <Menu />
       </div>
+      </section>
     </div>
   );
   }
@@ -130,9 +130,8 @@ const styles = {
     border: '1px solid #A9A9A9',
     marginTop: '2%',
     marginLeft: 'auto',
-    marginRight: 'auto',
+    //marginRight: 'auto',
     padding: '10px',
-    paddingRight: 50,
   },
 }
 
