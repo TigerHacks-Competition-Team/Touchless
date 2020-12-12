@@ -1,6 +1,6 @@
 import * as tf from "@tensorflow/tfjs";
 
-const viewPort = [600, 500];
+const viewPort = [416, 416];
 
 export default class MLModel {
   constructor(props) {
@@ -20,6 +20,8 @@ export default class MLModel {
     img = tf.image.resizeBilinear(img, [416, 416]);
     img = img.expandDims(0);
     let imageData = img.arraySync();
+    console.log("image data: "+JSON.stringify(imageData))
+    
     img = tf.tensor(imageData, [1, 416, 416, 3], "int32");
     const height = img.shape[1] * (viewPort[1] / 416);
     const width = img.shape[2] * (viewPort[0] / 416);
@@ -59,7 +61,7 @@ export default class MLModel {
       }
       var boxes2 = tf.tensor2d(boxes, [result[2].shape[1], result[2].shape[2]]);
       const indexTensor = tf.tidy(() => {
-        return tf.image.nonMaxSuppression(boxes2, maxScores, maxNumBoxes);
+        return tf.image.nonMaxSuppression(boxes2, maxScores, maxNumBoxes, minScore);
       });
       const indexes = indexTensor.arraySync();
       indexTensor.dispose();
