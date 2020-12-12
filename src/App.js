@@ -43,6 +43,7 @@ class App extends React.Component {
         ref={this.canvasRef}
         width="600"
         height="500"
+        alignContent="center"
       />
     </div>
   );
