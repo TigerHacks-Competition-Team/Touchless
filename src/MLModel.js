@@ -1,5 +1,7 @@
 import * as tf from "@tensorflow/tfjs";
 
+const viewPort = [640, 480];
+
 export default class MLModel {
   constructor(props) {
     this.model = props;
@@ -14,9 +16,12 @@ export default class MLModel {
 
   infer = async (img, maxNumBoxes, minScore) => {
     img = tf.browser.fromPixels(img);
+    img = tf.image.resizeBilinear(img, [416, 416]);
     img = img.expandDims(0);
-    const height = img.shape[1];
-    const width = img.shape[2];
+    let imageData = img.arraySync();
+    img = tf.tensor(imageData, [1, 416, 416, 3], "int32");
+    const height = img.shape[1] * (viewPort[1] / 416);
+    const width = img.shape[2] * (viewPort[0] / 416);
 
     // model returns two tensors:
     // 1. box classification score with shape of [1, 1917, 90]
@@ -33,7 +38,8 @@ export default class MLModel {
     if (result != null) {
       const scores = result[0].dataSync();
       const boxes = result[2].dataSync();
-      const clss = result[1].dataSync();
+      var clss = result[1].arraySync();
+      clss = clss[0];
 
       // clean the webgl tensors
       //batched.dispose();
@@ -68,7 +74,7 @@ export default class MLModel {
         boxes2.arraySync(),
         maxScores,
         indexes,
-        classes
+        clss
       );
     } else {
       tf.dispose(result);
