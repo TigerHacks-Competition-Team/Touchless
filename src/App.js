@@ -1,7 +1,6 @@
 import React from 'react';
 import Menu from './Components/Menu';
 import * as tf from "@tensorflow/tfjs";
-import "./styles.css";
 import "./MLModel";
 import MLModel from "./MLModel";
 
