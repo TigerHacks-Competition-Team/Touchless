@@ -4,7 +4,7 @@ class Subcategory extends React.Component{
     render(){
         return (
                 <div style={styles.subCategoryDiv}>
-                  <button style={styles.menu}
+                  <button style={this.props.hovered ? styles.hoveredMenu : styles.menu}
                           onClick={this.props.onClick}>
                   {this.props.data.name}</button>
                     {this.props.toRender && this.props.data.menuItems.map(element => (
@@ -24,7 +24,8 @@ class Menu extends React.Component {
     constructor(props) {
       super(props);
         this.state = {
-            renderedSubmenu: 0,
+            hoveredSubmenu: -1,
+            renderedSubmenu: -1,
             data:
             [
                 {
@@ -56,18 +57,32 @@ class Menu extends React.Component {
       console.log(this.state.renderedSubmenu)
     }
     
-    listener
+    handleGestures() {
+      if (this.props.currentNum !== 0) {
+        this.state.hoveredSubmenu = this.props.currentNum - 1
+      }
+      this.props.classNums.forEach((num) => {
+        if (num === 3) {
+          this.state.renderedSubmenu = this.state.hoveredSubmenu
+        }
+      })
+    }
 
     render() {
-      let num = this.props.currentNum - 1
+      this.handleGestures()
       return (
        <div>
            <Subcategory data={this.state.data[0]} 
-                        toRender={num === 0}
+                        toRender={this.state.renderedSubmenu === 0}
+                        hovered = {this.state.hoveredSubmenu === 0}
                         onClick={() => this.openCategory(0)}/>
-           <Subcategory data={this.state.data[1]} toRender={num === 1}
+           <Subcategory data={this.state.data[1]}
+                        toRender={this.state.renderedSubmenu === 1}
+                        hovered = {this.state.hoveredSubmenu === 1}
                         onClick={() => this.openCategory(1)}/>
-           <Subcategory data={this.state.data[2]} toRender={num === 2}
+           <Subcategory data={this.state.data[2]} 
+                        toRender={this.state.renderedSubmenu === 2}
+                        hovered = {this.state.hoveredSubmenu === 2}
                         onClick={() => this.openCategory(2)}/>
        </div>
       );
@@ -86,6 +101,12 @@ const styles = {
     menu: {
       textAlign: "center",
       color: '#3DC4BB',
+      fontSize: "1.5em",
+    },
+    hoveredMenu: {
+      textAlign: "center",
+      backgroundColor: '#3DC4BB',
+      color: '#ffffff',
       fontSize: "1.5em",
     },
     menuItems: {
