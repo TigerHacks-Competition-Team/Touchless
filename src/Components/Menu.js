@@ -11,17 +11,19 @@ class Subcategory extends React.Component {
   render() {
     return (
       <div style={styles.subCategoryDiv}>
+        <view style={{display: "flex", flex: 1, flexDirection: "row"}}>
         <button
           style={this.props.hovered ? styles.hoveredMenu : styles.menu}
           onClick={this.props.onClick}
         >
           {this.props.data.name}
+          </button>
           <button
             onClick={() => this.props.removeCategory(this.props.data.name)}
           >
             Remove
-          </button>
         </button>
+        </view>
         {this.props.toRender && (
           <div>
             {this.props.data.menuItems.map((element) => (
@@ -186,9 +188,11 @@ export default Menu;
 
 const styles = {
   subCategoryDiv: {
-    display: "flex",
-    justifyContent: "center",
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     flexDirection: "column",
+
   },
   menu: {
     textAlign: "center",
