@@ -100,6 +100,10 @@ class Menu extends React.Component {
     };
   }
 
+  componentDidUpdate() {
+    this.handleGestures();
+  }
+
   async componentDidMount() {
     this.menuObj = new MenuObj({ menu: null });
     this.menuObj.setKey("Menu");
@@ -261,7 +265,6 @@ class Menu extends React.Component {
   }
 
   render() {
-    this.handleGestures();
     return (
       <div>
         {this.state.data != null && (
