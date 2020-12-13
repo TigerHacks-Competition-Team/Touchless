@@ -189,14 +189,15 @@ class Menu extends React.Component {
 
   resetMenu() {
     let results = {
-      category: this.menuObj.menu[this.state.hoveredSubmenu],
+      category: this.menuObj.menu.options[this.state.hoveredSubmenu].name,
       menuItem: this.menuObj.menu.options[this.state.hoveredSubmenu].menuItems[
         this.state.renderedItemMenu
       ],
       side: this.sidesMenuObj.menu.options[this.state.renderedSidesSubmenu].name,
     };
     console.log("reciept: "+JSON.stringify(results))
-    let res = this.state.receipt.push(results)
+    let res = this.state.receipt
+    res.push(results)
     this.setState({
       hoveredSidesSubmenu: -1,
       renderedSidesSubmenu: -1,
@@ -346,7 +347,7 @@ class Menu extends React.Component {
               return (
                 <div>
                   <p>
-                    {item.menuItem}, {item.side},
+                    {item.menuItem} with {item.side},
                   </p>
                 </div>
               );

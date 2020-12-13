@@ -72,8 +72,8 @@ class App extends React.Component {
           //ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
           setTimeout(() => {
             this.detectFrame(video);
-          }, 1000);
-        }, 1000);
+          }, 500);
+        }, 500);
       });
     });
   };
