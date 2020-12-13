@@ -196,9 +196,9 @@ class Menu extends React.Component {
       let results = {
         category: this.menuObj.menu.options[this.state.hoveredSubmenu].name,
         menuItem: this.menuObj.menu.options[this.state.hoveredSubmenu].menuItems[
-          this.state.renderedItemMenu
+          this.state.renderedSidesSubmenu
         ],
-        side: this.sidesMenuObj.menu.options[this.state.renderedSidesSubmenu].name,
+        side: this.sidesMenuObj.menu.options[this.state.hoveredSidesSubmenu].name,
       };
       console.log("reciept: "+JSON.stringify(results))
       let res = this.state.receipt
