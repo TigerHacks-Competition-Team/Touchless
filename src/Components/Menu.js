@@ -32,28 +32,26 @@ class Subcategory extends React.Component {
           <div>
             {this.props.data.menuItems.map((element, index) => (
               <div
-                style={
-                  index === this.props.hoveredItemMenu
-                    ? styles.hoveredMenu
-                    : styles.menu
-                }
+                style={styles.itemContainer}
               >
-                <p style={styles.menuItems}>{element}</p>
+                <p style={this.props.hoveredItemMenu===index ? {...styles.hoveredMenu,...styles.item} : {...styles.menu, ...styles.item}}>{element}</p>
                 <button
                   onClick={() =>
                     this.props.removeMenuItem(this.props.data.name, element)
                   }
+                  style={{...styles.removeBtn, height: "30px"}}
                 >
                   Remove
                 </button>
               </div>
             ))}
             {this.props.allowItemChanges && (
-              <div>
+              <div style={styles.inputCont}>
                 <input
                   placeholder="Item Name"
                   onChange={(e) => this.setState({ newItem: e.target.value })}
                   value={this.state.newItem}
+                  style={styles.input}
                 />
                 <button
                   onClick={() => {
@@ -62,6 +60,7 @@ class Subcategory extends React.Component {
                       this.state.newItem
                     );
                   }}
+                  style={styles.submitBtn}
                 >
                   Add Item
                 </button>
@@ -204,6 +203,7 @@ class Menu extends React.Component {
       <div>
         {this.state.data != null && (
           <div>
+            <h2 style={styles.menuHeaders}>Entrees</h2>
             {this.state.data.options.map((object, index) => {
               return (
                 <Subcategory
@@ -224,23 +224,26 @@ class Menu extends React.Component {
             })}
           </div>
         )}
-        <div>
+        <div style={styles.inputCont}>
           <input
             placeholder="Category Name"
             onChange={(e) => this.setState({ newCatName: e.target.value })}
             value={this.state.newCatName}
+            style={styles.input}
           />
           <button
             onClick={() => {
               this.menuObj.addCategory(this.state.newCatName);
               this.setState({ data: this.menuObj.menu });
             }}
+            style={styles.submitBtn}
           >
             Add Category
           </button>
         </div>
         {this.state.sides != null && (
-          <div>
+          <div style={{borderTop:"solid 1px #DDD"}}>
+            <h2 style={styles.menuHeaders}>Sides</h2>
             {this.state.sides.options.map((object, index) => {
               return (
                 <Subcategory
@@ -257,17 +260,19 @@ class Menu extends React.Component {
                 />
               );
             })}
-            <div>
+            <div style={styles.inputCont}>
               <input
                 placeholder="Side Name"
                 onChange={(e) => this.setState({ newSideName: e.target.value })}
                 value={this.state.newSideName}
+                style={styles.input}
               />
               <button
                 onClick={() => {
                   this.sidesMenuObj.addCategory(this.state.newSideName);
                   this.setState({ sides: this.sidesMenuObj.menu });
                 }}
+                style={styles.submitBtn}
               >
                 Add Side
               </button>
@@ -285,16 +290,26 @@ const styles = {
   subCategoryDiv: {
     direction: "flex",
     flex: 1,
+    marginLeft: "8px",
+    marginRight: "8px",
     //flexDirection: "column",
+    borderBottom: "#DDD 1px solid",
   },
   category: {
     width: '100%',
     border: "none",
     
-    borderBottom: "#DDD 1px solid",
+    
     padding: 8,
     outline: "none",
     minHeight: "50px"
+  },
+  item: {
+    width: '100%',
+    border: "none",
+    outline: "none",
+    minHeight: "10px",
+    fontSize: "1em",
   },
   menu: {
     textAlign: "center",
@@ -309,10 +324,42 @@ const styles = {
     marginTop: "8px",
     marginBottom: "8px",
   },
+  itemContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: "calc(100%-16px)",
+    marginLeft: "8px",
+    marginRight: "8px",
+    marginTop: "4px",
+    marginBottom: "4px",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   removeBtn: {
     border: "none",
     backgroundColor: "#ff6961",
     color: "#fff",
+  },
+  input: {
+    width: "100%",
+    border: "none",
+    outline: "none",
+    borderBottom: "solid 1px #808080",
+    marginRight: "8px",
+    marginBottom: "2px",
+  },
+  inputCont: {
+    width: "calc(100% - 16px)",
+    display: "flex",
+    flexDirection: "row",
+    margin: "8px"
+  },
+  submitBtn: {
+    border: "none",
+    outline: "none",
+    backgroundColor: "#3DC4BB",
+    padding: "4px",
+    color: "#fff"
   },
   hoveredMenu: {
     textAlign: "center",
@@ -325,4 +372,10 @@ const styles = {
     padding: "1px",
     textAlign: "center",
   },
+  menuHeaders: {
+    textAlign: "center",
+    color: "#3DC4BB",
+    borderBottom: "dashed 2px #3dc4bb",
+    fontSize: "2.5em"
+  }
 };

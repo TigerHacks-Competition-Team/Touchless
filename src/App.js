@@ -188,7 +188,7 @@ const styles = {
     marginTop: "2%",
     marginLeft: "auto",
     //marginRight: 'auto',
-    padding: "10px",
+    paddingTop: "10px",
     zAxis: 1,
   },
   counter: {
