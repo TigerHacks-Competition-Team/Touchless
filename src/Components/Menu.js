@@ -214,8 +214,9 @@ class Menu extends React.Component {
           break;
       }
     }
+    let doubleClosed = (this.props.classNums.length == 2 && this.props.classNums[0] == 1 && this.props.classNums[1] == 1)
     this.props.classNums.forEach((num) => {
-      if (num === 3) {
+      if (num === 3 || doubleClosed) {
         switch (this.state.menuLevel) {
           case 0:
             if (this.state.hoveredSubmenu != -1) {
@@ -237,7 +238,7 @@ class Menu extends React.Component {
         }
       }
       if (num === 2) {
-        //this.resetMenu();
+          // this.resetMenu()
       }
     });
   }
