@@ -148,7 +148,7 @@ class Menu extends React.Component {
               return (
                 <Subcategory
                   data={object}
-                  toRender={this.state.currentIdx === index}
+                  toRender={this.state.renderedSubmenu === index}
                   onClick={() => {
                     this.setState({ currentIdx: index });
                   }}
