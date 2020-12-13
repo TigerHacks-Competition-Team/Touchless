@@ -139,6 +139,7 @@ class Menu extends React.Component {
   }
 
   render() {
+    this.handleGestures()
     return (
       <div>
         {this.state.data != null && (
@@ -155,6 +156,7 @@ class Menu extends React.Component {
                   addMenuItem={this.addMenuItem}
                   removeMenuItem={this.removeMenuItem}
                   removeCategory={(cat) => this.menuObj.removeCategory(cat)}
+                  hovered={this.state.hoveredSubmenu===index}
                 />
               );
             })}
