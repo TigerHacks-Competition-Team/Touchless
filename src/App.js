@@ -169,7 +169,7 @@ class App extends React.Component {
           width="416"
           height="416"
         />
-        <section style={{ paddingRight: 200 }}>
+        <section>
           <div style={styles.box}>
             <p style={{ alignText: "center" }}>MENU</p>
             <Menu currentNum={this.state.currentNum} classNums={this.state.classNums}/>
@@ -182,11 +182,13 @@ class App extends React.Component {
 
 const styles = {
   box: {
-    alignContent: "center",
-    width: "30%",
+    float: "right",
+    alignContent: "right",
+    width: "50%",
     border: "1px solid #A9A9A9",
     marginTop: "2%",
-    marginLeft: "auto",
+    marginLeft: "55%",
+    marginRight: "10px",
     //marginRight: 'auto',
     paddingTop: "10px",
     zAxis: 1,

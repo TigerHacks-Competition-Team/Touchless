@@ -275,7 +275,7 @@ class Menu extends React.Component {
             Add Category
           </button>
         </div>
-        {this.state.sides != null && (
+        {this.state.sides != null && this.state.renderedItemMenu!=-1&& (
           <div style={{borderTop:"solid 1px #DDD"}}>
             <h2 style={styles.menuHeaders}>Sides</h2>
             {this.state.sides.options.map((object, index) => {
