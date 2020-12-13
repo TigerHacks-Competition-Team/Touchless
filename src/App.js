@@ -9,6 +9,11 @@ class App extends React.Component {
   videoRef = React.createRef()
   canvasRef = React.createRef()
 
+  constructor(props){
+    super(props)
+    this.state={tot: 0}
+  }
+
   async componentDidMount() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       const webCamPromise = navigator.mediaDevices
@@ -17,7 +22,7 @@ class App extends React.Component {
           video: {
             facingMode: "user",
             width: { exact: 416 },
-            height: {exact: 416}, 
+            height: {exact: 416 }, 
           }
         })
         .then((stream) => {
@@ -48,11 +53,31 @@ class App extends React.Component {
 
 
 detectFrame = (video) => {
-    this.model.infer(video, 2, 0.04).then((predictions) => {
+    this.model.infer(video, 2, 0.6).then((predictions) => {
       //console.log("adding to frame: " + JSON.stringify(predictions[0].bbox));
       this.renderPredictions(predictions);
       requestAnimationFrame(() => {
-        this.detectFrame(video);
+        setTimeout(async () => {
+          /*window.stream.getTracks().forEach((track) => {
+            track.stop()
+          })
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: {
+              facingMode: "user",
+              width: { exact: 416 },
+              height: {exact: 416 }, 
+            }
+          })
+          window.stream = stream
+          this.videoRef.current.srcObject = stream*/
+          const ctx = this.canvasRef.current.getContext("2d");
+    //ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+          setTimeout(() => {
+            this.detectFrame(video);
+          }, 100)
+        }, 500)
+        
       });
     });
   };
@@ -66,8 +91,10 @@ renderPredictions = (predictions) => {
     ctx.font = font;
     ctx.textBaseline = "top";
     console.log("predictions: " + predictions.length);
+    let tot = 0;
     predictions.forEach((prediction) => {
-      if (prediction.score > 0.05) {
+      console.log("prediction.score: "+prediction.score)
+      if (prediction.score > 0.6) {
         const x = prediction.bbox[0];
         const y = prediction.bbox[1];
         const width = prediction.bbox[2];
@@ -88,15 +115,22 @@ renderPredictions = (predictions) => {
         ctx.fillRect(x, y, textWidth + 4, textHeight + 4);
         // Draw the text last to ensure it's on top.
         ctx.fillStyle = "#000000";
+        if (prediction.class > 3) {
+          if (prediction.class == 4) { tot+= 5}
+          else if (prediction.class == 5) { tot+= 4}
+          else if (prediction.class == 6) { tot+= 1}
+          else if (prediction.class == 7) { tot+= 3}
+          else if (prediction.class == 8) { tot+= 2}
+        }
         ctx.fillText(classes[prediction.class] + " %" + prediction.score * 100, x, y);
       }
-      
+      this.setState({tot: tot})
     });
   };
   render(){
   return (
     <div className="App">
-      
+      <div style={{...styles.counter, height: ((this.state.tot/10)*100)+"vh"}}></div>
       <video
         className="size"
         autoPlay
@@ -118,6 +152,7 @@ renderPredictions = (predictions) => {
         <Menu />
       </div>
       </section>
+      
     </div>
   );
   }
@@ -133,6 +168,11 @@ const styles = {
     //marginRight: 'auto',
     padding: '10px',
   },
+  counter: {
+    position: "absolute",
+    width: "100vh",
+    backgroundColor: "blue",
+  }
 }
 
 export default App;
