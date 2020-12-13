@@ -96,7 +96,7 @@ class Menu extends React.Component {
       newCatName: "",
       newSideName: "",
       currentIdx: this.props.currentNum - 1,
-      receipt: [{category: "Breakfast", menuItem: "pancakes", side: "hash browns"}],
+      receipt: [],
     };
   }
 
@@ -188,6 +188,15 @@ class Menu extends React.Component {
   };
 
   resetMenu() {
+    let results = {
+      category: this.menuObj.menu[this.state.hoveredSubmenu],
+      menuItem: this.menuObj.menu.options[this.state.hoveredSubmenu].menuItems[
+        this.state.renderedItemMenu
+      ],
+      side: this.sidesMenuObj.menu.options[this.state.renderedSidesSubmenu].name,
+    };
+    console.log("reciept: "+JSON.stringify(results))
+    let res = this.state.receipt.push(results)
     this.setState({
       hoveredSidesSubmenu: -1,
       renderedSidesSubmenu: -1,
@@ -195,6 +204,7 @@ class Menu extends React.Component {
       renderedItemMenu: -1,
       hoveredSubmenu: -1,
       menuLevel: 0,
+      receipt: res
     });
   }
 
@@ -214,7 +224,10 @@ class Menu extends React.Component {
           break;
       }
     }
-    let doubleClosed = (this.props.classNums.length == 2 && this.props.classNums[0] == 1 && this.props.classNums[1] == 1)
+    let doubleClosed =
+      this.props.classNums.length == 2 &&
+      this.props.classNums[0] == 1 &&
+      this.props.classNums[1] == 1;
     this.props.classNums.forEach((num) => {
       if (num === 3 || doubleClosed) {
         switch (this.state.menuLevel) {
@@ -232,13 +245,13 @@ class Menu extends React.Component {
             return;
           case 2:
             if (this.state.hoveredSidesSubmenu != -1) {
-              //this.resetMenu();
+              this.resetMenu();
             }
             return;
         }
       }
       if (num === 2) {
-          // this.resetMenu()
+        // this.resetMenu()
       }
     });
   }
