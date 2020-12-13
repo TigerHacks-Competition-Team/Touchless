@@ -1,3 +1,4 @@
+import { conv2dTranspose } from "@tensorflow/tfjs";
 import React, { Component } from "react";
 import MenuObj from "../MenuObj";
 
@@ -77,11 +78,12 @@ class Menu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hoveredSubmenu: -1,
-      renderedSubmenu: -1,
       hoveredSidesSubmenu: -1,
       renderedSidesSubmenu: -1,
       hoveredItemMenu: -1,
+      renderedItemMenu: -1,
+      hoveredSubmenu: -1,
+      menuLevel: 0,
       data: null,
       newCatName: "",
       newSideName: "",
@@ -176,23 +178,55 @@ class Menu extends React.Component {
     console.log(this.state.renderedSubmenu);
   };
 
+  resetMenu() {
+    this.setState({
+      hoveredSidesSubmenu: -1,
+      renderedSidesSubmenu: -1,
+      hoveredItemMenu: -1,
+      renderedItemMenu: -1,
+      hoveredSubmenu: -1,
+      menuLevel: 0,
+    })
+  }
+
   handleGestures() {
+    console.log("Menu Level: " + this.state.menuLevel)
     if (this.props.currentNum !== 0) {
       console.log("hovering a menu")
-      if (this.state.hoveredSubmenu != -1) {
-        if (this.state.hoveredItemMenu != -1) {
-          this.state.hoveredSidesSubmenu = this.props.currentNum - 1;
-        } else {
+      switch (this.state.menuLevel) {
+        case 0:
+          this.state.hoveredSubmenu = this.props.currentNum - 1;
+          break;
+        case 1:
           this.state.hoveredItemMenu = this.props.currentNum - 1;
-        }
-      } else {
-        this.state.hoveredSubmenu = this.props.currentNum - 1;
-        this.state.renderedSubmenu = this.state.hoveredSubmenu;
+          break; 
+        case 2:
+          this.state.hoveredSidesSubmenu = this.props.currentNum - 1;
+          break;
       }
+
     }
     this.props.classNums.forEach((num) => {
       if (num === 3) {
-        this.state.renderedSubmenu = this.state.hoveredSubmenu;
+        switch (this.state.menuLevel) {
+          case 0:
+            if (this.state.hoveredSubmenu != -1) {
+              this.state.renderedItemMenu = this.state.hoveredSubmenu
+              this.state.menuLevel = 1;
+            }
+            return;
+          case 1:
+            if (this.state.hoveredItemMenu != -1) {
+              this.state.renderedSidesSubmenu = this.state.hoveredItemMenu;
+              this.state.menuLevel = 2;
+            }
+            return;
+          case 2:
+            if (this.state.hoveredSidesSubmenu != -1) {
+              this.resetMenu()
+            }
+            return;
+        }
       }
     });
   }
@@ -208,9 +242,9 @@ class Menu extends React.Component {
               return (
                 <Subcategory
                   data={object}
-                  toRender={this.state.renderedSubmenu === index}
+                  toRender={this.state.renderedItemMenu === index}
                   onClick={() => {
-                    this.setState({ renderedSubmenu: index });
+                    this.setState({ renderedItemMenu: index });
                   }}
                   menuObj={this.menuObj}
                   addMenuItem={this.addMenuItem}
