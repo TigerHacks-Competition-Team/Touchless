@@ -55,18 +55,19 @@ class Menu extends React.Component {
       })
       console.log(this.state.renderedSubmenu)
     }
-  
-    render() {
     
-          
+    listener
+
+    render() {
+      let num = this.props.currentNum - 1
       return (
        <div>
            <Subcategory data={this.state.data[0]} 
-                        toRender={this.state.renderedSubmenu === 0}
+                        toRender={num === 0}
                         onClick={() => this.openCategory(0)}/>
-           <Subcategory data={this.state.data[1]} toRender={this.state.renderedSubmenu === 1}
+           <Subcategory data={this.state.data[1]} toRender={num === 1}
                         onClick={() => this.openCategory(1)}/>
-           <Subcategory data={this.state.data[2]} toRender={this.state.renderedSubmenu === 2}
+           <Subcategory data={this.state.data[2]} toRender={num === 2}
                         onClick={() => this.openCategory(2)}/>
        </div>
       );

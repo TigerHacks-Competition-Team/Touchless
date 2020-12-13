@@ -170,7 +170,7 @@ class App extends React.Component {
         <section style={{ paddingRight: 200 }}>
           <div style={styles.box}>
             <p style={{ alignText: "center" }}>MENU</p>
-            <Menu />
+            <Menu currentNum={this.state.currentNum}/>
           </div>
         </section>
       </div>
