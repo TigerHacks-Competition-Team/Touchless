@@ -73,12 +73,13 @@ class Menu extends React.Component {
   }
 
   async componentDidMount() {
-    this.menuObj = new MenuObj({ menu: null });
+    this.menuObj = new MenuObj({ menu: null});
+    this.menuObj.setKey("Menu")
     await this.menuObj.load();
     console.log("menu is: " + this.menuObj.toString());
     if (!this.menuObj.menu) {
       console.log("making a menu");
-      this.menuObj = new MenuObj({
+      this.menuObj.setMenu({
         menu: {
           options: [
             {
@@ -96,12 +97,43 @@ class Menu extends React.Component {
           ],
         },
       });
+      this.menuObj.setKey("Menu")
       await this.menuObj.save();
       await this.menuObj.load();
       console.log("menu is: " + this.menuObj.toString());
     }
+    this.sidesMenuObj = new MenuObj({ menu: null});
+    this.sidesMenuObj.setKey("SidesMenu")
+    await this.sidesMenuObj.load();
+    console.log("menu is: " + this.sidesMenuObj.toString());
+    if (!this.sidesMenuObj.menu) {
+      console.log("making a menu");
+      this.sidesMenuObj.setMenu({
+        menu: {
+          options: [
+            {
+              name: "French Fries",
+              menuItems: [],
+            },
+            {
+              name: "Pancakes",
+              menuItems: [],
+            },
+            {
+              name: "Two Eggs",
+              menuItems: [],
+            },
+          ],
+        },
+      });
+      this.sidesMenuObj.setKey("SidesMenu")
+      await this.sidesMenuObj.save();
+      await this.sidesMenuObj.load();
+      console.log("sidesMenu is: " + this.sidesMenuObj.toString());
+    }
     this.setState({
       data: this.menuObj.menu,
+      sides: this.sidesMenuObj.menu
     });
   }
 
@@ -150,7 +182,7 @@ class Menu extends React.Component {
                   data={object}
                   toRender={this.state.renderedSubmenu === index}
                   onClick={() => {
-                    this.setState({ currentIdx: index });
+                    this.setState({ renderedSubmenu: index });
                   }}
                   menuObj={this.menuObj}
                   addMenuItem={this.addMenuItem}
@@ -177,6 +209,26 @@ class Menu extends React.Component {
             Add Category
           </button>
         </div>
+        {this.state.sides != null && (
+          <div>
+            {this.state.sides.options.map((object, index) => {
+              return (
+                <Subcategory
+                  data={object}
+                  toRender={this.state.renderedSubmenu === index}
+                  onClick={() => {
+                    this.setState({ renderedSubmenu: index });
+                  }}
+                  menuObj={this.menuObj}
+                  addMenuItem={this.addMenuItem}
+                  removeMenuItem={this.removeMenuItem}
+                  removeCategory={(cat) => this.menuObj.removeCategory(cat)}
+                  hovered={this.state.hoveredSubmenu===index}
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   }
