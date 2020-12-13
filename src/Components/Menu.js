@@ -28,8 +28,14 @@ class Subcategory extends React.Component {
 
         {this.props.toRender && (
           <div>
-            {this.props.data.menuItems.map((element) => (
-              <div>
+            {this.props.data.menuItems.map((element, index) => (
+              <div
+                style={
+                  index === this.props.hoveredItemMenu
+                    ? styles.hoveredMenu
+                    : styles.menu
+                }
+              >
                 <p style={styles.menuItems}>{element}</p>
                 <button
                   onClick={() =>
@@ -40,23 +46,25 @@ class Subcategory extends React.Component {
                 </button>
               </div>
             ))}
-            <div>
-              <input
-                placeholder="Item Name"
-                onChange={(e) => this.setState({ newItem: e.target.value })}
-                value={this.state.newItem}
-              />
-              <button
-                onClick={() => {
-                  this.props.addMenuItem(
-                    this.props.data.name,
-                    this.state.newItem
-                  );
-                }}
-              >
-                Add Item
-              </button>
-            </div>
+            {this.props.allowItemChanges && (
+              <div>
+                <input
+                  placeholder="Item Name"
+                  onChange={(e) => this.setState({ newItem: e.target.value })}
+                  value={this.state.newItem}
+                />
+                <button
+                  onClick={() => {
+                    this.props.addMenuItem(
+                      this.props.data.name,
+                      this.state.newItem
+                    );
+                  }}
+                >
+                  Add Item
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -70,19 +78,24 @@ class Menu extends React.Component {
     this.state = {
       hoveredSubmenu: -1,
       renderedSubmenu: -1,
+      hoveredSidesSubmenu: -1,
+      renderedSidesSubmenu: -1,
+      hoveredItemMenu: -1,
       data: null,
       newCatName: "",
+      newSideName: "",
       currentIdx: this.props.currentNum - 1,
     };
   }
 
   async componentDidMount() {
     this.menuObj = new MenuObj({ menu: null });
+    this.menuObj.setKey("Menu");
     await this.menuObj.load();
     console.log("menu is: " + this.menuObj.toString());
     if (!this.menuObj.menu) {
       console.log("making a menu");
-      this.menuObj = new MenuObj({
+      this.menuObj.setMenu({
         menu: {
           options: [
             {
@@ -100,12 +113,43 @@ class Menu extends React.Component {
           ],
         },
       });
+      this.menuObj.setKey("Menu");
       await this.menuObj.save();
       await this.menuObj.load();
       console.log("menu is: " + this.menuObj.toString());
     }
+    this.sidesMenuObj = new MenuObj({ menu: null });
+    this.sidesMenuObj.setKey("SidesMenu");
+    await this.sidesMenuObj.load();
+    console.log("menu is: " + this.sidesMenuObj.toString());
+    if (!this.sidesMenuObj.menu) {
+      console.log("making a menu");
+      this.sidesMenuObj.setMenu({
+        menu: {
+          options: [
+            {
+              name: "French Fries",
+              menuItems: [],
+            },
+            {
+              name: "Pancakes",
+              menuItems: [],
+            },
+            {
+              name: "Two Eggs",
+              menuItems: [],
+            },
+          ],
+        },
+      });
+      this.sidesMenuObj.setKey("SidesMenu");
+      await this.sidesMenuObj.save();
+      await this.sidesMenuObj.load();
+      console.log("sidesMenu is: " + this.sidesMenuObj.toString());
+    }
     this.setState({
       data: this.menuObj.menu,
+      sides: this.sidesMenuObj.menu,
     });
   }
 
@@ -133,7 +177,16 @@ class Menu extends React.Component {
 
   handleGestures() {
     if (this.props.currentNum !== 0) {
-      this.state.hoveredSubmenu = this.props.currentNum - 1;
+      if (this.state.hoveredSubmenu != -1) {
+        if (this.state.hoveredItemMenu != -1) {
+          this.state.hoveredSidesSubmenu = this.props.currentNum - 1;
+        } else {
+          this.state.hoveredItemMenu = this.props.currentNum - 1;
+        }
+      } else {
+        this.state.hoveredSubmenu = this.props.currentNum - 1;
+        this.state.renderedSubmenu = this.state.hoveredSubmenu;
+      }
     }
     this.props.classNums.forEach((num) => {
       if (num === 3) {
@@ -143,7 +196,7 @@ class Menu extends React.Component {
   }
 
   render() {
-    this.handleGestures()
+    this.handleGestures();
     return (
       <div>
         {this.state.data != null && (
@@ -154,13 +207,15 @@ class Menu extends React.Component {
                   data={object}
                   toRender={this.state.renderedSubmenu === index}
                   onClick={() => {
-                    this.setState({ currentIdx: index });
+                    this.setState({ renderedSubmenu: index });
                   }}
                   menuObj={this.menuObj}
                   addMenuItem={this.addMenuItem}
                   removeMenuItem={this.removeMenuItem}
                   removeCategory={(cat) => this.menuObj.removeCategory(cat)}
-                  hovered={this.state.hoveredSubmenu===index}
+                  hovered={this.state.hoveredSubmenu === index}
+                  hoveredItemMenu={this.state.hoveredItemMenu}
+                  allowItemChanges
                 />
               );
             })}
@@ -181,6 +236,41 @@ class Menu extends React.Component {
             Add Category
           </button>
         </div>
+        {this.state.sides != null && (
+          <div>
+            {this.state.sides.options.map((object, index) => {
+              return (
+                <Subcategory
+                  data={object}
+                  toRender={this.state.renderedSidesSubmenu === index}
+                  onClick={() => {
+                    this.setState({ renderedSidesSubmenu: index });
+                  }}
+                  menuObj={this.menuObj}
+                  addMenuItem={this.addMenuItem}
+                  removeMenuItem={this.removeMenuItem}
+                  removeCategory={(cat) => this.sidesMenuObj.removeCategory(cat)}
+                  hovered={this.state.hoveredSidesSubmenu === index}
+                />
+              );
+            })}
+            <div>
+              <input
+                placeholder="Side Name"
+                onChange={(e) => this.setState({ newSideName: e.target.value })}
+                value={this.state.newSideName}
+              />
+              <button
+                onClick={() => {
+                  this.sidesMenuObj.addCategory(this.state.newSideName);
+                  this.setState({ sides: this.sidesMenuObj.menu });
+                }}
+              >
+                Add Side
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -193,7 +283,6 @@ const styles = {
     direction: "flex",
     flex: 1,
     flexDirection: "column",
-
   },
   category: {
     width: '100%',

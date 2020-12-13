@@ -3,11 +3,11 @@ export default class MenuObj {
     this.menu = props.menu
   }
 
-  save() {
+  save(key) {
     return new Promise((resolve, reject) => {
       try {
         let data = toString()
-        window.localStorage.setItem("Menu", this.toString()); // Saves data to local storage
+        window.localStorage.setItem(this.key!=null?this.key:key!=null?key:"Menu", this.toString()); // Saves data to local storage
         resolve();
       } catch (error) {
         console.warn("error saving data: " + error);
@@ -16,11 +16,15 @@ export default class MenuObj {
     });
   }
 
-  load() {
+  setKey(key) {
+    this.key = key
+  }
+
+  load(key) {
     console.log("getting data")
     return new Promise((resolve, reject) => {
       try {
-        var menuData = window.localStorage.getItem("Menu"); // Saves data to local storage
+        var menuData = window.localStorage.getItem(this.key!=null?this.key:key!=null?key:"Menu"); // Saves data to local storage
         console.log("data: "+menuData)
         if (menuData == null) {menuData = "null"}
         menuData = JSON.parse(menuData)
@@ -31,6 +35,10 @@ export default class MenuObj {
         reject();
       }
     });
+  }
+
+  setMenu(props) {
+    this.menu = props.menu
   }
 
   addCategory(categoryName) {
