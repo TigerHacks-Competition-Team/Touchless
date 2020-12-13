@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import MenuObj from "../MenuObj";
 
+
 class Subcategory extends React.Component {
   constructor(props) {
     super(props);
@@ -11,19 +12,20 @@ class Subcategory extends React.Component {
   render() {
     return (
       <div style={styles.subCategoryDiv}>
-        <view style={{display: "flex", flex: 1, flexDirection: "row"}}>
         <button
-          style={this.props.hovered ? styles.hoveredMenu : styles.menu}
+          style={this.props.hovered ? styles.hoveredMenu : styles.menu, styles.category}
           onClick={this.props.onClick}
         >
           {this.props.data.name}
-          </button>
           <button
             onClick={() => this.props.removeCategory(this.props.data.name)}
+            style={{backgroundColor:'rgba(200, 0, 0, 1)', display:'flex'}}
           >
             Remove
         </button>
-        </view>
+        </button>
+
+
         {this.props.toRender && (
           <div>
             {this.props.data.menuItems.map((element) => (
@@ -188,11 +190,19 @@ export default Menu;
 
 const styles = {
   subCategoryDiv: {
+    direction: "flex",
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     flexDirection: "column",
 
+  },
+  category: {
+    width: '100%',
+    height: 40,
+    borderBottomColor: '#DDD',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingLeft: 15
   },
   menu: {
     textAlign: "center",
