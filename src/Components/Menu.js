@@ -2,7 +2,6 @@ import { conv2dTranspose } from "@tensorflow/tfjs";
 import React, { Component } from "react";
 import MenuObj from "../MenuObj";
 
-
 class Subcategory extends React.Component {
   constructor(props) {
     super(props);
@@ -15,32 +14,41 @@ class Subcategory extends React.Component {
       <div style={styles.subCategoryDiv}>
         <div style={styles.categoryContainer}>
           <button
-            style={this.props.hovered ? {...styles.hoveredMenu,...styles.category} : {...styles.menu, ...styles.category}}
+            style={
+              this.props.hovered
+                ? { ...styles.hoveredMenu, ...styles.category }
+                : { ...styles.menu, ...styles.category }
+            }
             onClick={this.props.onClick}
           >
             {this.props.data.name}
-            
           </button>
           <button
-              onClick={() => this.props.removeCategory(this.props.data.name)}
-              style={styles.removeBtn}
-            >
-              Remove
+            onClick={() => this.props.removeCategory(this.props.data.name)}
+            style={styles.removeBtn}
+          >
+            Remove
           </button>
         </div>
 
         {this.props.toRender && (
           <div>
             {this.props.data.menuItems.map((element, index) => (
-              <div
-                style={styles.itemContainer}
-              >
-                <p style={this.props.hoveredItemMenu===index ? {...styles.hoveredMenu,...styles.item} : {...styles.menu, ...styles.item}}>{element}</p>
+              <div style={styles.itemContainer}>
+                <p
+                  style={
+                    this.props.hoveredItemMenu === index
+                      ? { ...styles.hoveredMenu, ...styles.item }
+                      : { ...styles.menu, ...styles.item }
+                  }
+                >
+                  {element}
+                </p>
                 <button
                   onClick={() =>
                     this.props.removeMenuItem(this.props.data.name, element)
                   }
-                  style={{...styles.removeBtn, height: "30px"}}
+                  style={{ ...styles.removeBtn, height: "30px" }}
                 >
                   Remove
                 </button>
@@ -88,6 +96,7 @@ class Menu extends React.Component {
       newCatName: "",
       newSideName: "",
       currentIdx: this.props.currentNum - 1,
+      receipt: [{category: "Breakfast", menuItem: "pancakes", side: "hash browns"}],
     };
   }
 
@@ -186,32 +195,31 @@ class Menu extends React.Component {
       renderedItemMenu: -1,
       hoveredSubmenu: -1,
       menuLevel: 0,
-    })
+    });
   }
 
   handleGestures() {
-    console.log("Menu Level: " + this.state.menuLevel)
+    console.log("Menu Level: " + this.state.menuLevel);
     if (this.props.currentNum !== 0) {
-      console.log("hovering a menu")
+      console.log("hovering a menu");
       switch (this.state.menuLevel) {
         case 0:
           this.state.hoveredSubmenu = this.props.currentNum - 1;
           break;
         case 1:
           this.state.hoveredItemMenu = this.props.currentNum - 1;
-          break; 
+          break;
         case 2:
           this.state.hoveredSidesSubmenu = this.props.currentNum - 1;
           break;
       }
-
     }
     this.props.classNums.forEach((num) => {
       if (num === 3) {
         switch (this.state.menuLevel) {
           case 0:
             if (this.state.hoveredSubmenu != -1) {
-              this.state.renderedItemMenu = this.state.hoveredSubmenu
+              this.state.renderedItemMenu = this.state.hoveredSubmenu;
               this.state.menuLevel = 1;
             }
             return;
@@ -223,13 +231,13 @@ class Menu extends React.Component {
             return;
           case 2:
             if (this.state.hoveredSidesSubmenu != -1) {
-              this.resetMenu()
+              //this.resetMenu();
             }
             return;
         }
       }
       if (num === 2) {
-          this.resetMenu()
+        //this.resetMenu();
       }
     });
   }
@@ -278,8 +286,8 @@ class Menu extends React.Component {
             Add Category
           </button>
         </div>
-        {this.state.sides != null && this.state.renderedItemMenu!=-1&& (
-          <div style={{borderTop:"solid 1px #DDD"}}>
+        {this.state.sides != null && this.state.renderedItemMenu != -1 && (
+          <div style={{ borderTop: "solid 1px #DDD" }}>
             <h2 style={styles.menuHeaders}>Sides</h2>
             {this.state.sides.options.map((object, index) => {
               return (
@@ -292,7 +300,9 @@ class Menu extends React.Component {
                   menuObj={this.menuObj}
                   addMenuItem={this.addMenuItem}
                   removeMenuItem={this.removeMenuItem}
-                  removeCategory={(cat) => this.sidesMenuObj.removeCategory(cat)}
+                  removeCategory={(cat) =>
+                    this.sidesMenuObj.removeCategory(cat)
+                  }
                   hovered={this.state.hoveredSidesSubmenu === index}
                 />
               );
@@ -316,6 +326,19 @@ class Menu extends React.Component {
             </div>
           </div>
         )}
+        {this.state.receipt.length > 0 && (
+          <div>
+            {this.state.receipt.map((item) => {
+              return (
+                <div>
+                  <p>
+                    {item.menuItem}, {item.side},
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   }
@@ -333,16 +356,15 @@ const styles = {
     borderBottom: "#DDD 1px solid",
   },
   category: {
-    width: '100%',
+    width: "100%",
     border: "none",
-    
-    
+
     padding: 8,
     outline: "none",
-    minHeight: "50px"
+    minHeight: "50px",
   },
   item: {
-    width: '100%',
+    width: "100%",
     border: "none",
     outline: "none",
     minHeight: "10px",
@@ -355,15 +377,15 @@ const styles = {
     backgroundColor: "#ffffff",
   },
   categoryContainer: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
     width: "100%",
     marginTop: "8px",
     marginBottom: "8px",
   },
   itemContainer: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
     width: "calc(100%-16px)",
     marginLeft: "8px",
     marginRight: "8px",
@@ -389,14 +411,14 @@ const styles = {
     width: "calc(100% - 16px)",
     display: "flex",
     flexDirection: "row",
-    margin: "8px"
+    margin: "8px",
   },
   submitBtn: {
     border: "none",
     outline: "none",
     backgroundColor: "#3DC4BB",
     padding: "4px",
-    color: "#fff"
+    color: "#fff",
   },
   hoveredMenu: {
     textAlign: "center",
@@ -413,6 +435,6 @@ const styles = {
     textAlign: "center",
     color: "#3DC4BB",
     borderBottom: "dashed 2px #3dc4bb",
-    fontSize: "2.5em"
-  }
+    fontSize: "2.5em",
+  },
 };
