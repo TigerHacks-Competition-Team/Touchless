@@ -12,19 +12,21 @@ class Subcategory extends React.Component {
   render() {
     return (
       <div style={styles.subCategoryDiv}>
-        <button
-          style={this.props.hovered ? styles.hoveredMenu : styles.menu, styles.category}
-          onClick={this.props.onClick}
-        >
-          {this.props.data.name}
+        <div style={styles.categoryContainer}>
           <button
-            onClick={() => this.props.removeCategory(this.props.data.name)}
-            style={{backgroundColor:'rgba(200, 0, 0, 1)', display:'flex'}}
+            style={this.props.hovered ? {...styles.hoveredMenu,...styles.category} : {...styles.menu, ...styles.category}}
+            onClick={this.props.onClick}
           >
-            Remove
-        </button>
-        </button>
-
+            {this.props.data.name}
+            
+          </button>
+          <button
+              onClick={() => this.props.removeCategory(this.props.data.name)}
+              style={styles.removeBtn}
+            >
+              Remove
+          </button>
+        </div>
 
         {this.props.toRender && (
           <div>
@@ -177,6 +179,7 @@ class Menu extends React.Component {
 
   handleGestures() {
     if (this.props.currentNum !== 0) {
+      console.log("hovering a menu")
       if (this.state.hoveredSubmenu != -1) {
         if (this.state.hoveredItemMenu != -1) {
           this.state.hoveredSidesSubmenu = this.props.currentNum - 1;
@@ -282,21 +285,34 @@ const styles = {
   subCategoryDiv: {
     direction: "flex",
     flex: 1,
-    flexDirection: "column",
+    //flexDirection: "column",
   },
   category: {
     width: '100%',
-    height: 40,
-    borderBottomColor: '#DDD',
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingLeft: 15
+    border: "none",
+    
+    borderBottom: "#DDD 1px solid",
+    padding: 8,
+    outline: "none",
+    minHeight: "50px"
   },
   menu: {
     textAlign: "center",
     color: "#3DC4BB",
     fontSize: "1.5em",
+    backgroundColor: "#ffffff",
+  },
+  categoryContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: "100%",
+    marginTop: "8px",
+    marginBottom: "8px",
+  },
+  removeBtn: {
+    border: "none",
+    backgroundColor: "#ff6961",
+    color: "#fff",
   },
   hoveredMenu: {
     textAlign: "center",

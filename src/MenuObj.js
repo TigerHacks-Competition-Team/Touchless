@@ -59,6 +59,7 @@ export default class MenuObj {
   removeCategory(categoryName) {
     let categoryIdx = this.menu.options.findIndex(x => x.name === categoryName)
     this.menu.options.splice(categoryIdx, 1)
+    this.save()
     return this.menu
   }
 
