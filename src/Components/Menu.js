@@ -229,6 +229,9 @@ class Menu extends React.Component {
             return;
         }
       }
+      if (num === 2) {
+          this.resetMenu()
+      }
     });
   }
 
