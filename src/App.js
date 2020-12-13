@@ -3,6 +3,7 @@ import Menu from "./Components/Menu";
 import * as tf from "@tensorflow/tfjs";
 import "./MLModel";
 import MLModel from "./MLModel";
+import finger from "./finger.jpg";
 
 class App extends React.Component {
   videoRef = React.createRef();
@@ -162,6 +163,7 @@ class App extends React.Component {
           ref={this.videoRef}
           width="416"
           height="416"
+        
         />
         <canvas
           className="size"
@@ -175,6 +177,7 @@ class App extends React.Component {
             <Menu currentNum={this.state.currentNum} classNums={this.state.classNums}/>
           </div>
         </section>
+          <img src={finger} height='200' width='450'/>
       </div>
     );
   }
