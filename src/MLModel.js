@@ -19,10 +19,7 @@ export default class MLModel {
     img = tf.browser.fromPixels(img);
     img = tf.image.resizeBilinear(img, [416, 416]);
     img = img.expandDims(0);
-    let imageData = img.arraySync();
-    console.log("image data: "+JSON.stringify(imageData))
-    
-    img = tf.tensor(imageData, [1, 416, 416, 3], "int32");
+    img = await this.rgbToGrayScale(img)
     const height = img.shape[1] * (viewPort[1] / 416);
     const width = img.shape[2] * (viewPort[0] / 416);
 
@@ -84,6 +81,28 @@ export default class MLModel {
       return [];
     }
   };
+
+  rgbToGrayScale = (img) => {
+    return new Promise((resolve, reject) => {
+      console.log("shape: "+img.shape)
+      let it1 = img.shape[1]
+      let it2 = img.shape[2]
+      img = img.arraySync()
+      
+      for (let i = 0; i<it1; i++) {
+        for (let j = 0; j<it2; j++) {
+          let tot = img[0][i][j][0] + img[0][i][j][1] + img[0][i][j][2]
+          tot = tot/3
+          img[0][i][j][0] = tot
+          img[0][i][j][1] = tot
+          img[0][i][j][2] = tot
+        }
+      }
+      console.log("img: "+JSON.stringify(img))
+      resolve(tf.tensor(img, [1,416,416,3], "int32"))
+    })
+    
+  }
 
   buildDetectedObjects = (width, height, boxes, scores, indexes, classes) => {
     const count = indexes.length;
