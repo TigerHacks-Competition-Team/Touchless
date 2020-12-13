@@ -177,7 +177,7 @@ class App extends React.Component {
             <Menu currentNum={this.state.currentNum} classNums={this.state.classNums}/>
           </div>
         </section>
-          <img src={finger} height='200' width='450'/>
+          <img src={finger} height='200' width='450' style={{position: "fixed", bottom: 0}}/>
       </div>
     );
   }
@@ -199,7 +199,7 @@ const styles = {
   counter: {
     position: "absolute",
     width: "50vw",
-    backgroundColor: "blue",
+    backgroundColor: "transparent",
     left: 0,
     right: 0,
     zAxis: -1,
