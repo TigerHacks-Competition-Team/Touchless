@@ -10,7 +10,7 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { tot: 0, currentNum: 0 };
+    this.state = { tot: 0, currentNum: 0, classNums: []};
   }
 
   async componentDidMount() {
@@ -98,6 +98,7 @@ class App extends React.Component {
     ctx.textBaseline = "top";
     console.log("predictions: " + predictions.length);
     let tot = 0;
+    let preds = [];
     predictions.forEach((prediction) => {
       console.log("prediction.score: " + prediction.score);
       if (prediction.score > 0.6) {
@@ -139,8 +140,9 @@ class App extends React.Component {
           x,
           y
         );
+        preds.push(prediction.class)
       }
-      this.setState({ tot: tot, currentNum: tot });
+      this.setState({ tot: tot, currentNum: tot, classNums: preds});
     });
   };
   render() {
@@ -170,7 +172,7 @@ class App extends React.Component {
         <section style={{ paddingRight: 200 }}>
           <div style={styles.box}>
             <p style={{ alignText: "center" }}>MENU</p>
-            <Menu currentNum={this.state.currentNum}/>
+            <Menu currentNum={this.state.currentNum} classNums={this.state.classNums}/>
           </div>
         </section>
       </div>

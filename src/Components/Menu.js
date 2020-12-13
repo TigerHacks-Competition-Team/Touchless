@@ -11,7 +11,8 @@ class Subcategory extends React.Component {
   render() {
     return (
       <div style={styles.subCategoryDiv}>
-        <button style={styles.menu} onClick={this.props.onClick}>
+        <button style={this.props.hovered ? styles.hoveredMenu : styles.menu}
+                          onClick={this.props.onClick}>
           {this.props.data.name}
           <button onClick={() => this.props.removeCategory(this.props.data.name)}>Remove</button>
         </button>
@@ -51,7 +52,8 @@ class Menu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      renderedSubmenu: 0,
+      hoveredSubmenu: -1,
+      renderedSubmenu: -1,
       data: null,
       newCatName: "",
       currentIdx: this.props.currentNum - 1,
@@ -113,7 +115,16 @@ class Menu extends React.Component {
     console.log(this.state.renderedSubmenu);
   };
 
-  listener;
+  handleGestures() {
+    if (this.props.currentNum !== 0) {
+      this.state.hoveredSubmenu = this.props.currentNum - 1
+    }
+    this.props.classNums.forEach((num) => {
+      if (num === 3) {
+        this.state.renderedSubmenu = this.state.hoveredSubmenu
+      }
+    })
+  }
 
   render() {
     return (
@@ -160,19 +171,25 @@ class Menu extends React.Component {
 export default Menu;
 
 const styles = {
-  subCategoryDiv: {
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column",
-  },
-  menu: {
-    textAlign: "center",
-    color: "#3DC4BB",
-    fontSize: "1.5em",
-  },
-  menuItems: {
-    margin: "2px",
-    padding: "1px",
-    textAlign: "center",
-  },
-};
+    subCategoryDiv: {
+      display: "flex",
+      justifyContent: "center",
+      flexDirection: "column",
+    },
+    menu: {
+      textAlign: "center",
+      color: '#3DC4BB',
+      fontSize: "1.5em",
+    },
+    hoveredMenu: {
+      textAlign: "center",
+      backgroundColor: '#3DC4BB',
+      color: '#ffffff',
+      fontSize: "1.5em",
+    },
+    menuItems: {
+        margin: "2px",
+        padding: "1px",
+        textAlign: "center"
+    }
+  }
