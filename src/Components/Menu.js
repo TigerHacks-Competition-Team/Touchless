@@ -345,7 +345,7 @@ class Menu extends React.Component {
           </div>
         )}
         {this.state.receipt.length > 0 && (
-          <div>
+          <div style={{position: "fixed", left: 0, top: 432}}>
             {this.state.receipt.map((item) => {
               return (
                 <div>
