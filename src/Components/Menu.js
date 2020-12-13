@@ -1,96 +1,178 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import MenuObj from "../MenuObj";
 
-class Subcategory extends React.Component{
-    render(){
-        return (
-                <div style={styles.subCategoryDiv}>
-                  <button style={styles.menu}
-                          onClick={this.props.onClick}>
-                  {this.props.data.name}</button>
-                    {this.props.toRender && this.props.data.menuItems.map(element => (
-                      <div>
-                        <p style={styles.menuItems}>
-                        {element}
-                        </p>
-                      </div>
-                    ))}
-                </div>
-        );
-    }
+class Subcategory extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      newItem: "",
+    };
+  }
+  render() {
+    return (
+      <div style={styles.subCategoryDiv}>
+        <button style={styles.menu} onClick={this.props.onClick}>
+          {this.props.data.name}
+          <button onClick={() => this.props.removeCategory(this.props.data.name)}>Remove</button>
+        </button>
+        {this.props.toRender && (
+          <div>
+            {this.props.data.menuItems.map((element) => (
+              <div>
+                <p style={styles.menuItems}>{element}</p>
+                <button onClick={() => this.props.removeMenuItem(this.props.data.name, element)}>Remove</button>
+              </div>
+            ))}
+            <div>
+              <input
+                placeholder="Item Name"
+                onChange={(e) => this.setState({ newItem: e.target.value })}
+                value={this.state.newItem}
+              />
+              <button
+                onClick={() => {
+                  this.props.addMenuItem(
+                    this.props.data.name,
+                    this.state.newItem
+                  );
+                }}
+              >
+                Add Item
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 }
 
-
 class Menu extends React.Component {
-    constructor(props) {
-      super(props);
-        this.state = {
-            renderedSubmenu: 0,
-            data:
-            [
-                {
-                name: "Breakfast",
-                menuItems: ["Pancake", "Cheese"],
-                },
-                {
-                name: "Lunch",
-                menuItems: ["Sandwich", "Soup"],
-                },
-                {
-                name: "Dinner",
-                menuItems:["Pasta", "Chicken"],
-                }
-
-            ]  
-        }
-    }
-
-    openCategory = (nthCategory) => {
-      let numCategories = this.state.data.length
-      if (nthCategory > numCategories) {
-        console.log("Invalid Category")
-        return
-      }
-      this.setState({
-        renderedSubmenu: nthCategory,
-      })
-      console.log(this.state.renderedSubmenu)
-    }
-    
-    listener
-
-    render() {
-      let num = this.props.currentNum - 1
-      return (
-       <div>
-           <Subcategory data={this.state.data[0]} 
-                        toRender={num === 0}
-                        onClick={() => this.openCategory(0)}/>
-           <Subcategory data={this.state.data[1]} toRender={num === 1}
-                        onClick={() => this.openCategory(1)}/>
-           <Subcategory data={this.state.data[2]} toRender={num === 2}
-                        onClick={() => this.openCategory(2)}/>
-       </div>
-      );
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      renderedSubmenu: 0,
+      data: null,
+      newCatName: "",
+      currentIdx: this.props.currentNum - 1,
+    };
   }
 
+  async componentDidMount() {
+    this.menuObj = new MenuObj({ menu: null });
+    await this.menuObj.load();
+    console.log("menu is: " + this.menuObj.toString());
+    if (!this.menuObj.menu) {
+      console.log("making a menu");
+      this.menuObj = new MenuObj({
+        menu: {
+          options: [
+            {
+              name: "Breakfast",
+              menuItems: ["Pancake", "Cheese"],
+            },
+            {
+              name: "Lunch",
+              menuItems: ["Sandwich", "Soup"],
+            },
+            {
+              name: "Dinner",
+              menuItems: ["Pasta", "Chicken"],
+            },
+          ],
+        },
+      });
+      await this.menuObj.save();
+      await this.menuObj.load();
+      console.log("menu is: " + this.menuObj.toString());
+    }
+    this.setState({
+      data: this.menuObj.menu,
+    });
+  }
+
+  addMenuItem = (cat, item) => {
+    this.menuObj.addMenuItem(cat, item);
+    this.setState({ data: this.menuObj.menu });
+  };
+
+  removeMenuItem = (cat, item) => {
+    this.menuObj.removeMenuItem(cat, item);
+    this.setState({ data: this.menuObj.menu });
+  }
+
+  openCategory = (nthCategory) => {
+    let numCategories = this.state.data.length;
+    if (nthCategory > numCategories) {
+      console.log("Invalid Category");
+      return;
+    }
+    this.setState({
+      renderedSubmenu: nthCategory,
+    });
+    console.log(this.state.renderedSubmenu);
+  };
+
+  listener;
+
+  render() {
+    return (
+      <div>
+        {this.state.data != null && (
+          <div>
+            {this.state.data.options.map((object, index) => {
+              return (
+                <Subcategory
+                  data={object}
+                  toRender={this.state.currentIdx === index}
+                  onClick={() => {
+                    this.setState({ currentIdx: index });
+                  }}
+                  menuObj={this.menuObj}
+                  addMenuItem={this.addMenuItem}
+                  removeMenuItem={this.removeMenuItem}
+                  removeCategory={(cat) => this.menuObj.removeCategory(cat)}
+                />
+              );
+            })}
+          </div>
+        )}
+        <div>
+          <input
+            placeholder="Category Name"
+            onChange={(e) => this.setState({ newCatName: e.target.value })}
+            value={this.state.newCatName}
+          />
+          <button
+            onClick={() => {
+              this.menuObj.addCategory(this.state.newCatName);
+              this.setState({ data: this.menuObj.menu });
+            }}
+          >
+            Add Category
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
 
 export default Menu;
 
 const styles = {
-    subCategoryDiv: {
-      display: "flex",
-      justifyContent: "center",
-      flexDirection: "column",
-    },
-    menu: {
-      textAlign: "center",
-      color: '#3DC4BB',
-      fontSize: "1.5em",
-    },
-    menuItems: {
-        margin: "2px",
-        padding: "1px",
-        textAlign: "center"
-    }
-  }
+  subCategoryDiv: {
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+  },
+  menu: {
+    textAlign: "center",
+    color: "#3DC4BB",
+    fontSize: "1.5em",
+  },
+  menuItems: {
+    margin: "2px",
+    padding: "1px",
+    textAlign: "center",
+  },
+};

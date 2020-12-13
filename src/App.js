@@ -73,7 +73,7 @@ class App extends React.Component {
           setTimeout(() => {
             this.detectFrame(video);
           }, 100);
-        }, 500);
+        }, 100);
       });
     });
   };
