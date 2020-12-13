@@ -1,17 +1,16 @@
-import React from 'react';
-import Menu from './Components/Menu';
+import React from "react";
+import Menu from "./Components/Menu";
 import * as tf from "@tensorflow/tfjs";
 import "./MLModel";
 import MLModel from "./MLModel";
 
-
 class App extends React.Component {
-  videoRef = React.createRef()
-  canvasRef = React.createRef()
+  videoRef = React.createRef();
+  canvasRef = React.createRef();
 
-  constructor(props){
-    super(props)
-    this.state={tot: 0}
+  constructor(props) {
+    super(props);
+    this.state = { tot: 0, currentNum: 0 };
   }
 
   async componentDidMount() {
@@ -22,19 +21,19 @@ class App extends React.Component {
           video: {
             facingMode: "user",
             width: { exact: 416 },
-            height: {exact: 416 }, 
-          }
+            height: { exact: 416 },
+          },
         })
         .then((stream) => {
-          window.stream = stream
-          this.videoRef.current.srcObject = stream
+          window.stream = stream;
+          this.videoRef.current.srcObject = stream;
           return new Promise((resolve, reject) => {
             this.videoRef.current.onloadedmetadata = () => {
-              resolve()
-            }
-          })
-        })
-      
+              resolve();
+            };
+          });
+        });
+
       const model = new MLModel("web_model/model.json");
       const modelPromise = model.load();
       console.log("getting model");
@@ -50,9 +49,7 @@ class App extends React.Component {
     }
   }
 
-
-
-detectFrame = (video) => {
+  detectFrame = (video) => {
     this.model.infer(video, 2, 0.6).then((predictions) => {
       //console.log("adding to frame: " + JSON.stringify(predictions[0].bbox));
       this.renderPredictions(predictions);
@@ -72,18 +69,27 @@ detectFrame = (video) => {
           window.stream = stream
           this.videoRef.current.srcObject = stream*/
           const ctx = this.canvasRef.current.getContext("2d");
-    //ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+          //ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
           setTimeout(() => {
             this.detectFrame(video);
-          }, 100)
-        }, 500)
-        
+          }, 100);
+        }, 500);
       });
     });
   };
 
-renderPredictions = (predictions) => {
-    const classes = ["Not Detecting", "Closed Hand", "Thumbs Down", "Thumbs Up", "Five", "Four", "One", "Three", "Two"];
+  renderPredictions = (predictions) => {
+    const classes = [
+      "Not Detecting",
+      "Closed Hand",
+      "Thumbs Down",
+      "Thumbs Up",
+      "Five",
+      "Four",
+      "One",
+      "Three",
+      "Two",
+    ];
     const ctx = this.canvasRef.current.getContext("2d");
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     // Font options.
@@ -93,7 +99,7 @@ renderPredictions = (predictions) => {
     console.log("predictions: " + predictions.length);
     let tot = 0;
     predictions.forEach((prediction) => {
-      console.log("prediction.score: "+prediction.score)
+      console.log("prediction.score: " + prediction.score);
       if (prediction.score > 0.6) {
         const x = prediction.bbox[0];
         const y = prediction.bbox[1];
@@ -116,63 +122,81 @@ renderPredictions = (predictions) => {
         // Draw the text last to ensure it's on top.
         ctx.fillStyle = "#000000";
         if (prediction.class > 3) {
-          if (prediction.class == 4) { tot+= 5}
-          else if (prediction.class == 5) { tot+= 4}
-          else if (prediction.class == 6) { tot+= 1}
-          else if (prediction.class == 7) { tot+= 3}
-          else if (prediction.class == 8) { tot+= 2}
+          if (prediction.class == 4) {
+            tot += 5;
+          } else if (prediction.class == 5) {
+            tot += 4;
+          } else if (prediction.class == 6) {
+            tot += 1;
+          } else if (prediction.class == 7) {
+            tot += 3;
+          } else if (prediction.class == 8) {
+            tot += 2;
+          }
         }
-        ctx.fillText(classes[prediction.class] + " %" + prediction.score * 100, x, y);
+        ctx.fillText(
+          classes[prediction.class] + " %" + prediction.score * 100,
+          x,
+          y
+        );
       }
-      this.setState({tot: tot})
+      this.setState({ tot: tot, currentNum: tot });
     });
   };
-  render(){
-  return (
-    <div className="App">
-      <div style={{...styles.counter, height: ((this.state.tot/10)*100)+"vh"}}></div>
-      <video
-        className="size"
-        autoPlay
-        playsInline
-        muted
-        ref={this.videoRef}
-        width="416"
-        height="416"
-      />
-      <canvas
-        className="size"
-        ref={this.canvasRef}
-        width="416"
-        height="416"
-      />
-      <section style={{paddingRight: 200}}>
-      <div style={styles.box}>
-      <p style={{alignText: "center"}}>MENU</p>
-        <Menu />
+  render() {
+    return (
+      <div className="App">
+        <div
+          style={{
+            ...styles.counter,
+            height: (this.state.tot / 10) * 100 + "vh",
+          }}
+        ></div>
+        <video
+          className="size"
+          autoPlay
+          playsInline
+          muted
+          ref={this.videoRef}
+          width="416"
+          height="416"
+        />
+        <canvas
+          className="size"
+          ref={this.canvasRef}
+          width="416"
+          height="416"
+        />
+        <section style={{ paddingRight: 200 }}>
+          <div style={styles.box}>
+            <p style={{ alignText: "center" }}>MENU</p>
+            <Menu />
+          </div>
+        </section>
       </div>
-      </section>
-      
-    </div>
-  );
+    );
   }
 }
 
 const styles = {
   box: {
     alignContent: "center",
-    width: '30%',
-    border: '1px solid #A9A9A9',
-    marginTop: '2%',
-    marginLeft: 'auto',
+    width: "30%",
+    border: "1px solid #A9A9A9",
+    marginTop: "2%",
+    marginLeft: "auto",
     //marginRight: 'auto',
-    padding: '10px',
+    padding: "10px",
+    zAxis: 1,
   },
   counter: {
     position: "absolute",
-    width: "100vh",
+    width: "50vw",
     backgroundColor: "blue",
-  }
-}
+    left: 0,
+    right: 0,
+    zAxis: -1,
+  },
+};
 
 export default App;
