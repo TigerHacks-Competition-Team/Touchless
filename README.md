@@ -1,6 +1,6 @@
 # Touchless
 ## About
-Webapp that uses machine learning hand gesture recognition to allow for touchless menu ordering. This allows for safe use of fast food and similar restaurants during the COVID pandemic. We collected thousands of pictures of different handgestures then trained and deployed a neural network to a menu UI in react.
+Webapp that uses machine learning hand gesture recognition to allow for touchless menu ordering. This allows for safe use of fast food and similar restaurants during the COVID pandemic. We collected thousands of pictures of different handgestures then trained and deployed a neural network to a menu UI in react. Winning project of HackTJ in December 2020.
 
 ## Tech
  - Tensorflow: training the neural network.
